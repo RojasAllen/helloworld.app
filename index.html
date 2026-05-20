@@ -1,24 +1,106 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World App</title>
+    <title>Hello World App | Next Level</title>
+    <style>
+        /* Reset default margins and center everything */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Create a beautiful glassmorphism card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4a00e0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Style an interactive button */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #6ae, #4a00e0);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(74, 0, 224, 0.5);
+        }
+
+        /* A small hidden message styling */
+        #secret-message {
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #2e7d32;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+    </style>
 </head>
-
-
 <body>
 
+    <div class="card">
+        <h1>Hello World!</h1>
+        <p>Welcome to my first web page. I've officially upgraded it to the next level.</p>
+        
+        <button class="btn" onclick="revealMagic()">Click for Magic</button>
+        
+        <div id="secret-message">🎉 You just ran your first JavaScript action! Keep building!</div>
+    </div>
 
-    <h1>Hello World!</h1>
-    <p>Welcome to my first web page.</p>
-
+    <script>
+        function revealMagic() {
+            const message = document.getElementById('secret-message');
+            message.style.opacity = '1';
+        }
+    </script>
 
 </body>
-
-
 </html>
-
