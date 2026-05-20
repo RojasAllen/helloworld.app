@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World App </title>
+    <title>Hello World App</title>
     <style>
         /* Reset default margins and center everything */
         * {
@@ -21,6 +21,19 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden; /* Prevents scrollbars if particles fly offscreen */
+            position: relative;
+        }
+
+        /* Canvas overlay for fireworks */
+        #fireworksCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicking through the canvas to the button */
+            z-index: 1;
         }
 
         /* Create a beautiful glassmorphism card */
@@ -33,6 +46,8 @@
             max-width: 400px;
             width: 100%;
             transition: transform 0.3s ease;
+            position: relative;
+            z-index: 2; /* Keeps the card sitting cleanly above the fireworks */
         }
 
         .card:hover {
@@ -86,9 +101,11 @@
 </head>
 <body>
 
+    <canvas id="fireworksCanvas"></canvas>
+
     <div class="card">
         <h1>Hello World!</h1>
-        <p>Seminar Activity </p>
+        <p>Seminar Activity</p>
         
         <button class="btn" onclick="revealMagic()">Click for Magic</button>
         
@@ -96,9 +113,94 @@
     </div>
 
     <script>
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Match canvas size to the browser window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let particles = [];
+
+        // Particle Blueprint Class
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                // Random angle and speed for the explosion blast
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                this.velocityX = Math.cos(angle) * speed;
+                this.velocityY = Math.sin(angle) * speed;
+                this.alpha = 1; // Used to fade out over time
+                this.decay = Math.random() * 0.015 + 0.015;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.velocityX;
+                this.y += this.velocityY;
+                this.velocityY += 0.05; // Simulates gravity pulling them down
+                this.alpha -= this.decay;
+            }
+        }
+
+        // Creates a burst of multiple particles
+        function createFirework(x, y) {
+            const colors = ['#FF5733', '#FFC300', '#DAF7A6', '#FF33FF', '#33FFF0', '#33FF57'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, randomColor));
+            }
+        }
+
+        // The animation loop that constantly renders the movement
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, index) => {
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    particle.update();
+                    particle.draw();
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Run the background loop continuously
+        animate();
+
+        // Main action triggered when button is clicked
         function revealMagic() {
+            // Show the text
             const message = document.getElementById('secret-message');
             message.style.opacity = '1';
+
+            // Trigger random fireworks across the screen instantly
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const randomX = Math.random() * canvas.width;
+                    const randomY = Math.random() * (canvas.height * 0.6); // keep them in upper 60% of screen
+                    createFirework(randomX, randomY);
+                }, i * 300); // Delays each firework slightly for a staggered effect
+            }
         }
     </script>
 
